@@ -17,7 +17,7 @@ while True:
     prompt = input()
 
     # User can stop the chat by sending 'End Chat' as a Prompt
-    if prompt.lower() == 'END CHAT':
+    if prompt.upper() == 'END CHAT':
         break
 
     # Generate and Print the Response from ChatBot

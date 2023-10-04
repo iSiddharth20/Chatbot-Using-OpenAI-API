@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>OpenAI Chatbot</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <meta charset="UTF-8">
+        <meta name="description" content="OpenAI Chatbot">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                margin: 0;
+            }
+
+            .header {
+                padding: 80px;
+                text-align: center;
+                background: #1abc9c;
+                color: white;
+                font-size: 30px;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .sticky {
+                position: fixed;
+                top: 0;
+                width: 100%;
+            }
+
+            .sticky + .content {
+                padding-top: 102px;
+            }
+
+            .input {
+                padding: 16px;
+                text-align: center;
+                background: #1abc9c;
+                color: rgb(0, 0, 0);
+                font-size: 30px;
+            }
+
+            .input input[type=text] {
+                padding: 10px;
+                font-size: 17px;
+                border: none;
+                width: 80%;
+                background: white;
+            }
+
+            .input input[type=submit] {
+                float: right;
+                padding: 10px;
+                font-size: 17px;
+                border: none;
+                width: 20%;
+                background: #1abc9c;
+                color: white;
+                cursor: pointer;
+            }
+
+            .input input[type=submit]:hover {
+                background: #45a049;
+            }
+
+            .messages {
+                padding: 16px;
+                background-color: #f1f1f1;
+                min-height: 100%;
+            }
+
+            .message {
+                padding: 16px;
+                background: white;
+                border: none;
+                width: 80%;
+                background: white;
+            }
+
+            .message .bot {
+                float: left;
+                padding: 10px;
+                font-size: 17px;
+                border: none;
+                width: 80%;
+                background: #1abc9c;
+                color: white;
+                cursor: pointer;
+            }
+
+            .message .bot:hover {
+                background: #45a049;
+            }
+
+            .message .user {
+                float: right;
+                padding: 10px;
+                font-size: 17px;
+                border: none;
+                width: 80%;
+                background: #1abc9c;
+                color: white;
+                cursor: pointer;
+            }
+
+            .message .user:hover {
+                background: #45a049;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>OpenAI Chatbot</h1>
+        </div>
+        <div class="messages">
+            <!-- Messages will be displayed here -->
+        </div>
+        <div class="input">
+            <form action="" method="post">
+                <input type="text" name="message" placeholder="Type your message here" autocomplete="off" autofocus>
+                <input type="submit" value="Send">
+            </form>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script>
+            // When the form is submitted, send the message to the server
+            $('form').submit(function(e){
+                e.preventDefault();
+                $.post('/chat', {
+                    prompt: $('input[name=message]').val()
+                });
+                $('input[name=message]').val('');
+            });
+        </script>
+    </body>
