@@ -45,6 +45,7 @@
             font-size: 30px;
         }
 
+        /* Updated CSS styles for the textarea */
         .input textarea {
             flex: 1; /* Grow to take available space */
             padding: 10px;
@@ -55,6 +56,9 @@
             resize: none;
             border-radius: 10px;
             width: 900px;
+            height: auto; /* Set initial height to auto */
+            max-height: 100px; /* Set maximum height to 200px */
+            overflow-y: auto; /* Add a vertical scrollbar if content overflows */
         }
 
         .input input[type=submit] {
@@ -69,9 +73,6 @@
             transform: translateY(-23px);
         }
 
-
-
-
         .input input[type=submit]:hover {
             background: #45a049;
         }
@@ -82,6 +83,11 @@
             overflow-y: scroll; /* Add a vertical scrollbar if content overflows */
             padding: 16px;
             background-color: #f1f1f1;
+            justify-content: top;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            top: 0;
         }
 
         .message {
@@ -143,24 +149,45 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
+        // Function to enable or disable input elements
+        function toggleInputElements(disabled) {
+            $('textarea[name=message]').prop('disabled', disabled);
+            $('#send-button').prop('disabled', disabled);
+        }
+
+        // Function to adjust textarea height based on content
+        function adjustTextareaHeight() {
+            var textarea = $('textarea[name=message]')[0];
+            textarea.style.height = 'auto'; // Reset height to auto
+            textarea.style.height = (Math.min(textarea.scrollHeight, 100)) + 'px'; // Set height up to 200px
+            // Scroll the page to the bottom
+            document.body.scrollTop = document.body.scrollHeight;
+        }
+
         // When the form is submitted, send the message to the server
         $('form').submit(function (e) {
             e.preventDefault();
             var userMessage = $('textarea[name=message]').val();
-    
+
             if (userMessage === '') {
                 return;
             }
-    
+
+            // Disable input elements while processing
+            toggleInputElements(true);
+
             // Add the user message to the messages container
             $('.messages').append('<div class="message"><div class="user">' + userMessage + '</div></div>');
-    
+
             // Clear the input box
             $('textarea[name=message]').val('');
-    
+
+            // Reset the textarea's height
+            adjustTextareaHeight();
+
             // Scroll to the bottom of the container when a new message is added
             $('.messages').scrollTop($('.messages')[0].scrollHeight);
-    
+
             // Send the user message to the server
             $.post("/chat", {
                 prompt: userMessage
@@ -173,16 +200,22 @@
                     // Display the bot's response for successful responses
                     $('.messages').append('<div class="message"><div class="bot">' + response + '</div></div>');
                 }
-    
+
                 // Scroll to the bottom of the container after adding the response
                 $('.messages').scrollTop($('.messages')[0].scrollHeight);
+
+                // Re-enable input elements after processing
+                toggleInputElements(false);
             }).fail(function() {
                 // Handle AJAX request failure (e.g., server not responding)
                 $('.messages').append('<div class="message"><div class="bot">Something went wrong</div></div>');
                 $('.messages').scrollTop($('.messages')[0].scrollHeight);
+
+                // Re-enable input elements after processing
+                toggleInputElements(false);
             });
         });
-    
+
         // Add event listener to textarea to handle Enter and Shift+Enter
         $('textarea[name=message]').on('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -190,8 +223,17 @@
                 e.preventDefault();
                 // Submit the form
                 $('form').submit();
+            } else if (e.key === 'Enter' && e.shiftKey) {
+                // Add a newline character when Shift+Enter is pressed
+                document.execCommand('insertText', false, '\n');
+                // Adjust the textarea's height
+                adjustTextareaHeight();
+                e.preventDefault(); // Prevent default behavior (newline insertion)
             }
         });
+
+        // Adjust textarea height initially
+        adjustTextareaHeight();
     </script>
-    </body>
-    </html>
+</body>
+</html>
