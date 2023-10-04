@@ -1,0 +1,6 @@
+.DS_store
+venv/
+__pycache__/
+.vscode/
+.ipynb_checkpoints
+Icon?
