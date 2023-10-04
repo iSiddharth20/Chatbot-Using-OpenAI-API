@@ -164,57 +164,57 @@
             document.body.scrollTop = document.body.scrollHeight;
         }
 
-        // When the form is submitted, send the message to the server
-        $('form').submit(function (e) {
-            e.preventDefault();
-            var userMessage = $('textarea[name=message]').val();
+    // When the form is submitted, send the message to the server
+    $('form').submit(function (e) {
+        e.preventDefault();
+        var userMessage = $('textarea[name=message]').val();
 
-            if (userMessage === '') {
-                return;
+        if (userMessage === '') {
+            return;
+        }
+
+        // Disable input elements while processing
+        toggleInputElements(true);
+
+        // Add the user message to the messages container with proper line breaks
+        $('.messages').append('<div class="message"><div class="user">' + userMessage.replace(/\n/g, '<br>') + '</div></div>');
+
+        // Clear the input box
+        $('textarea[name=message]').val('');
+
+        // Reset the textarea's height
+        adjustTextareaHeight();
+
+        // Scroll to the bottom of the container when a new message is added
+        $('.messages').scrollTop($('.messages')[0].scrollHeight);
+
+        // Send the user message to the server
+        $.post("/chat", {
+            prompt: userMessage
+        }, function(response) {
+            // Check if the response is an error message
+            if (response.startsWith("Error:")) {
+                // Display "Something went wrong" for error responses
+                $('.messages').append('<div class="message"><div class="bot">Something went wrong</div></div>');
+            } else {
+                // Display the bot's response for successful responses with proper line breaks
+                $('.messages').append('<div class="message"><div class="bot">' + response.replace(/\n/g, '<br>') + '</div></div>');
             }
 
-            // Disable input elements while processing
-            toggleInputElements(true);
-
-            // Add the user message to the messages container
-            $('.messages').append('<div class="message"><div class="user">' + userMessage + '</div></div>');
-
-            // Clear the input box
-            $('textarea[name=message]').val('');
-
-            // Reset the textarea's height
-            adjustTextareaHeight();
-
-            // Scroll to the bottom of the container when a new message is added
+            // Scroll to the bottom of the container after adding the response
             $('.messages').scrollTop($('.messages')[0].scrollHeight);
 
-            // Send the user message to the server
-            $.post("/chat", {
-                prompt: userMessage
-            }, function(response) {
-                // Check if the response is an error message
-                if (response.startsWith("Error:")) {
-                    // Display "Something went wrong" for error responses
-                    $('.messages').append('<div class="message"><div class="bot">Something went wrong</div></div>');
-                } else {
-                    // Display the bot's response for successful responses
-                    $('.messages').append('<div class="message"><div class="bot">' + response + '</div></div>');
-                }
+            // Re-enable input elements after processing
+            toggleInputElements(false);
+        }).fail(function() {
+            // Handle AJAX request failure (e.g., server not responding)
+            $('.messages').append('<div class="message"><div class="bot">Something went wrong</div></div>');
+            $('.messages').scrollTop($('.messages')[0].scrollHeight);
 
-                // Scroll to the bottom of the container after adding the response
-                $('.messages').scrollTop($('.messages')[0].scrollHeight);
-
-                // Re-enable input elements after processing
-                toggleInputElements(false);
-            }).fail(function() {
-                // Handle AJAX request failure (e.g., server not responding)
-                $('.messages').append('<div class="message"><div class="bot">Something went wrong</div></div>');
-                $('.messages').scrollTop($('.messages')[0].scrollHeight);
-
-                // Re-enable input elements after processing
-                toggleInputElements(false);
-            });
+            // Re-enable input elements after processing
+            toggleInputElements(false);
         });
+    });
 
         // Add event listener to textarea to handle Enter and Shift+Enter
         $('textarea[name=message]').on('keydown', function(e) {
