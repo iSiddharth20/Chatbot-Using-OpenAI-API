@@ -1,5 +1,6 @@
 # ChatBot using OpenAI (ChatGPT) API
 Ready to Use Code to have your own ChatBot using OpenAI API.
+Also added WebApp Template for Reference! Thanks to [Lyubomir](https://github.com/LyubomirT)
 
 ### Steps to Use the ChatBot:
 - This Codebase requires [OpenAI API Key](https://openai.com/blog/openai-api), kindly make sure you get one.
