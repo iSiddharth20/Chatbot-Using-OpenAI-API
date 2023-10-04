@@ -1,8 +1,5 @@
 # ChatBot using OpenAI (ChatGPT) API
 Ready to Use Code to have your own ChatBot using OpenAI API.
-<br>
-Enter your API Key in "BotDefinition.py"
-This Codebase requires [TensorFlow](https://www.tensorflow.org/install), kindly make sure you have that installed.
 
 ### Steps to Use the ChatBot:
 - This Codebase requires [OpenAI API Key](https://openai.com/blog/openai-api), kindly make sure you get one.
